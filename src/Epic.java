@@ -15,4 +15,7 @@ public class Epic extends Task {
     public void addSubtask(Subtask subtask) {
         subtasks.add(subtask);
     }
+    public void removeSubtask(Subtask subtask) {
+        subtasks.remove(subtask);
+    }
 }

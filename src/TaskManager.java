@@ -26,7 +26,13 @@ public class TaskManager {
 
     public void deleteAllTasks() {
         tasks.clear();
+    }
+
+    public void deleteAllEpics() {
         epics.clear();
+    }
+
+    public void deleteAllSubtasks() {
         subtasks.clear();
     }
 
@@ -63,6 +69,7 @@ public class TaskManager {
         Epic epic = getEpicById(subtask.getEpicId());
         if (epic != null) {
             epic.addSubtask(subtask);
+            updateEpicStatus(epic);
         }
     }
 
@@ -82,7 +89,10 @@ public class TaskManager {
         if (subtasks.containsKey(subtask.getId())) {
             subtasks.replace(subtask.getId(), subtask);
 
-            updateEpicStatus(subtask.getEpicId());
+            Epic epic = getEpicById(subtask.getEpicId());
+            if (epic != null) {
+                updateEpicStatus(epic);
+            }
         }
     }
 
@@ -91,7 +101,13 @@ public class TaskManager {
     }
 
     public void deleteEpicById(int id) {
-        epics.remove(id);
+        Epic epic = getEpicById(id);
+        if (epic != null) {
+            for (Subtask subtask : epic.getSubtasks()) {
+                deleteSubtaskById(subtask.getId());
+            }
+            epics.remove(id);
+        }
     }
 
     public void deleteSubtaskById(int id) {
@@ -101,17 +117,12 @@ public class TaskManager {
             Epic epic = getEpicById(subtask.getEpicId());
             if (epic != null) {
                 epic.getSubtasks().remove(subtask);
-
-                updateEpicStatus(subtask.getEpicId());
+                updateEpicStatus(epic);
             }
         }
     }
 
-    private void updateEpicStatus(int epicId) {
-        Epic epic = getEpicById(epicId);
-        if (epic == null) {
-            return;
-        }
+    private void updateEpicStatus(Epic epic) {
         boolean allSubtasksDone = true;
         for (Subtask subtask : epic.getSubtasks()) {
             if (subtask.getStatus() != Status.DONE) {
@@ -121,7 +132,7 @@ public class TaskManager {
         }
         if (allSubtasksDone) {
             epic.setStatus(Status.DONE);
-        } else if (epic.getSubtasks().isEmpty() || epic.getStatus() == Status.NEW) {
+        } else if (epic.getSubtasks().isEmpty()) {
             epic.setStatus(Status.NEW);
         } else {
             epic.setStatus(Status.IN_PROGRESS);
