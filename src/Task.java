@@ -23,6 +23,16 @@ public class Task {
         return description;
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status=" + status +
+                '}';
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
