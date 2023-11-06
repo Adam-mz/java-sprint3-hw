@@ -39,12 +39,8 @@ public class Main {
             System.out.println();
         }
 
-        // изменяем статусы задач, подзадач и эпиков
-        task1.setStatus(Status.IN_PROGRESS);
-        subtask1.setStatus(Status.DONE);
-        subtask2.setStatus(Status.IN_PROGRESS);
-        epic1.setStatus(Status.IN_PROGRESS);
-        epic2.setStatus(Status.DONE);
+        
+
 
         // выводим все задачи после изменения статусов
         System.out.println("Все задачи после изменения статусов:");
